@@ -5,9 +5,6 @@ import com.example.serviceclient.model.Client;
 import com.example.serviceclient.repository.ClientRepository;
 import com.example.serviceclient.client.VoitureService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -26,6 +23,7 @@ public class ClientController {
 
     @Autowired
     private VoitureService voitureService;
+
 
     @Autowired
     private ClientService clientService;
@@ -51,15 +49,16 @@ public class ClientController {
 
     @GetMapping("/{id}/voitures/resttemplate")
     public List<Object> getClientVoituresRestTemplate(@PathVariable Long id) {
-        String url = "http://localhost:8888/voitures/client/" + id; // Using localhost:8888 for service-voiture
+        String url = "http://service-voiture/voitures/client/" + id; // Use service name
         return restTemplate.getForObject(url, List.class);
     }
 
     @GetMapping("/voitures/resttemplate")
     public List<Object> getAllVoituresRestTemplate() {
-        String url = "http://localhost:8888/voitures"; // Using localhost:8888 for service-voiture
+        String url = "http://service-voiture/voitures"; // Use service name
         return restTemplate.getForObject(url, List.class);
     }
+
 
     @GetMapping("/{id}/voitures/feign")
     public List<Object> getClientVoituresFeign(@PathVariable Long id) {
@@ -75,7 +74,7 @@ public class ClientController {
     public List<Object> getClientVoituresWebClient(@PathVariable Long id) {
         return webClientBuilder.build()
                 .get()
-                .uri("http://localhost:8888/voitures/client/" + id) // Using localhost:8888 for service-voiture
+                .uri("http://service-voiture/voitures/client/" + id) // Use service name
                 .retrieve()
                 .bodyToMono(List.class)
                 .block();
@@ -85,7 +84,7 @@ public class ClientController {
     public List<Object> getAllVoituresWebClient() {
         return webClientBuilder.build()
                 .get()
-                .uri("http://localhost:8888/voitures") // Using localhost:8888 for service-voiture
+                .uri("http://service-voiture/voitures") // Use service name
                 .retrieve()
                 .bodyToMono(List.class)
                 .block();
@@ -103,14 +102,14 @@ public class ClientController {
 
     @GetMapping("/resttemplate")
     public List<Client> getAllClientsRestTemplate() {
-        String url = "http://localhost:8888/clients"; // Using localhost:8888 for service-client
+        String url = "http://service-client/clients";
         return restTemplate.getForObject(url, List.class);
     }
 
     // Get client by ID (RestTemplate)
     @GetMapping("/resttemplate/{id}")
     public Client getClientByIdRestTemplate(@PathVariable Long id) {
-        String url = "http://localhost:8888/clients/" + id; // Using localhost:8888 for service-client
+        String url = "http://service-client/clients/" + id;
         return restTemplate.getForObject(url, Client.class);
     }
 
@@ -118,7 +117,7 @@ public class ClientController {
     public List<Client> getAllClientsWebClient() {
         return webClientBuilder.build()
                 .get()
-                .uri("http://localhost:8888/clients") // Using localhost:8888 for service-client
+                .uri("http://service-client/clients")
                 .retrieve()
                 .bodyToMono(List.class)
                 .block();
@@ -129,7 +128,7 @@ public class ClientController {
     public Client getClientByIdWebClient(@PathVariable Long id) {
         return webClientBuilder.build()
                 .get()
-                .uri("http://localhost:8888/clients/" + id) // Using localhost:8888 for service-client
+                .uri("http://service-client/clients/" + id)
                 .retrieve()
                 .bodyToMono(Client.class)
                 .block();
